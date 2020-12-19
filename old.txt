@@ -1,0 +1,46 @@
+    def get_confusion_matrix(self):
+        self.true_results = []
+        self.pred_results = self.classify_all()
+        self.true_pos = 0
+        self.true_neg = 0
+        self.false_pos = 0
+        self.false_neg = 0
+
+        for label in self.test_y:
+            self.true_results.append(label==self.true_num)
+
+        for i in range(len(self.true_results)):
+            if self.true_results[i] > 0 and self.pred_results[i] >0 :
+                self.true_pos = self.true_pos + 1
+
+            if (not self.true_results[i] > 0) and (not self.pred_results[i] > 0):
+                self.true_neg = self.true_neg + 1
+
+            if (not self.true_results[i] > 0) and self.pred_results[i] > 0:
+                self.false_pos = self.false_pos + 1
+
+            if self.true_results[i] > 0 and (not self.pred_results[i] > 0):
+                self.false_neg = self.false_neg + 1
+
+        self.error_rate = ((self.false_neg + self.false_pos) / self.test_x.shape[0]) * 100
+        
+    def print_confusion_matrix(self):
+        self.get_confusion_matrix()
+        
+        print("""\t\t+------------------------------------------------+
+                 Confusion Matrix Between {pos_num:5d} and {neg_num:5d}
+                              Error Rate: {error:8.2f}%               
+                +--------------+-------------+-------------------+
+                               |  Y_hat:{pos_num:5d}| Y_hat: {neg_num:7d}
+                +--------------+-------------+-------------------+
+                  Y: {pos_num:9d} | {true_pos:8d}    |    {false_pos:8d}   
+                +--------------+-------------+-------------------+
+                  Y: {neg_num:9d} | {false_neg:9d}   |    {true_neg:9d} 
+                +--------------+-------------+-------------------+                        
+                """.format(pos_num = self.true_num,
+                           neg_num = self.false_num,
+                           true_pos = self.true_pos,
+                           true_neg = self.true_neg,
+                           false_neg = self.false_neg,
+                           false_pos = self.false_pos,
+                           error = self.error_rate))  
